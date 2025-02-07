@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const http = require("http");
 const path = require("path");
 const userRoutes = require("./Routes/user"); // Fixed import
+const cookieparser = require("cookie-parser");
+const {checkForAuthentication} = require("./middleware/auth")
 const { Server } = require("socket.io");
 
 const app = express();
@@ -25,6 +27,12 @@ const port = process.env.PORT || 8000;
 app.use(express.static(path.resolve(__dirname, "public")));
 app.use(express.urlencoded({ extended: false })); // Fixed typo
 app.use(express.json());
+app.use(cookieparser());
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+
+app.use(checkForAuthentication("token"));
 
 // ✅ Create HTTP Server
 const server = http.createServer(app);
@@ -40,9 +48,13 @@ io.on("connection", (socket) => {
 });
 
 // ✅ Routes
-app.get("/", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "public", "index.html")); // Fixed path
+app.get('/', async (req, res) => {
+    console.log("User data at home:", req.user);
+    return res.render("home", {
+        user: req.user || null,
+    });
 });
+
 
 // Use User Routes
 app.use("/user", userRoutes);

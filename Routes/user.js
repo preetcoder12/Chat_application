@@ -1,34 +1,45 @@
 const express = require("express");
-const path = require("path");
 const User = require("../models/user");
-const route = express.Router();
+const router = express.Router();
 
-route.get("/signup", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../public/signup.html"));
+router.get("/signup", (req, res) => {
+    res.render("signup", { error: null });
 });
 
-route.post("/signup", async (req, res) => {
+router.post("/signup", async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        // ✅ Validate input fields
-        if (!username || !password || !email) {
-            return res.status(400).json({ msg: "Missing information" }); // Changed status code to 400
+        if (!username || !email || !password) {
+            return res.render("signup", { error: "All fields are required!" });
         }
+        const user = new User({ username, email, password });
+        await user.save();
 
-        // ✅ Create user in the database
-        await User.create({
-            username,
-            email,
-            password,
-        });
-
-        // ✅ Redirect user to home page or login page
-        return res.redirect("/");
-    } catch (error) {
-        console.error("Signup error:", error);
-        return res.status(500).json({ error: "Server error. Please try again." });
+        res.redirect("/user/signin");
+    } catch (err) {
+        console.error("Signup Error:", err);
+        res.render("signup", { error: "Something went wrong. Please try again!" });
     }
 });
 
-module.exports = route;
+router.get("/signin", (req, res) => {
+    res.render("signin", { error: null });
+});
+
+router.post("/signin", async (req, res) => {
+    const { email, password } = req.body;
+    if (!password || !email) {
+        return res.status(400).json({ msg: "Missing information" });
+    }
+    try {
+        const token = await User.matchPasswordAndGenerateToken(email, password);
+        res.cookie("token", token, { httpOnly: true });
+        return res.render('index');
+    } catch (error) {
+        console.error("Signin Error:", error);
+        return res.render('signin', { error: "Invalid credentials" });
+    }
+});
+
+module.exports = router;

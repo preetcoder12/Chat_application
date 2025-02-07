@@ -1,23 +1,33 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema, default: mongoose } = require("mongoose");
+const { createToken } = require("../services/auth");
 
 const Userschema = new Schema({
     username: {
         type: String,
-        required: true, // Fixed typo
+        required: true,
     },
     email: {
         type: String,
         required: true,
-    },
-    profileImg: {
-        type: String, // Added missing type
-        default: "/images/userdefault.png" // Ensure correct path
+        unique: true,
     },
     password: {
         type: String,
         required: true,
     }
+}, { timestamps: true });
+
+Userschema.static("matchPasswordAndGenerateToken", async function (email, password) {
+    const user = await this.findOne({ email });
+    if (!user) { throw new Error("User not found!"); }
+
+    // ✅ Direct password comparison
+    if (user.password !== password) {
+        throw new Error("Invalid Password");
+    }
+
+    return createToken(user);
 });
 
-const User = model("User", Userschema);
+const User = mongoose.model("User", Userschema);
 module.exports = User;
