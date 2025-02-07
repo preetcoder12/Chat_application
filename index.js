@@ -48,10 +48,9 @@ io.on("connection", (socket) => {
 });
 
 // ✅ Routes
-app.get('/', async (req, res) => {
-    console.log("User data at home:", req.user);
-    return res.render("home", {
-        user: req.user || null,
+app.get("/", (req, res) => {
+    return res.render("index", {
+        user: req.user || null, // Ensure user is passed even if it's null
     });
 });
 

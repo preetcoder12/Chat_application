@@ -8,32 +8,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="flex items-center justify-center min-h-screen bg-[#fbe8d3]">
+<body class="flex items-center justify-center min-h-screen bg-[#FAF3E0]">
     <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold text-center text-[#b85c38]">Signin</h2>
-        
+        <h2 class="text-2xl font-semibold text-center text-[#2C3E50]">Signin</h2>
+
         <% if (error) { %>
             <p class="text-red-500 text-sm text-center"><%= error %></p>
         <% } %>
-        
+
         <form method="post" action="/user/signin" class="mt-4">
             <div class="mb-4">
-                <label class="block text-sm font-medium text-[#b85c38]">Email</label>
+                <label class="block text-sm font-medium text-[#2C3E50]">Email</label>
                 <input type="email" id="email" name="email" required
-                    class="w-full px-4 py-2 mt-1 border border-[#b85c38] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b85c38]">
+                    class="w-full px-4 py-2 mt-1 border border-[#2980B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2980B9]">
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-[#b85c38]">Password</label>
+                <label class="block text-sm font-medium text-[#2C3E50]">Password</label>
                 <input type="password" id="password" name="password" required
-                    class="w-full px-4 py-2 mt-1 border border-[#b85c38] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b85c38]">
+                    class="w-full px-4 py-2 mt-1 border border-[#2980B9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2980B9]">
             </div>
             <button type="submit"
-                class="w-full px-4 py-2 font-semibold text-white bg-[#b85c38] rounded-lg hover:bg-[#953f2c] focus:outline-none focus:ring-2 focus:ring-[#953f2c]">
+                class="w-full px-4 py-2 font-semibold text-white bg-[#2980B9] rounded-lg hover:bg-[#1F618D] focus:outline-none focus:ring-2 focus:ring-[#1F618D]">
                 Signin
             </button>
         </form>
-        <p class="mt-4 text-sm text-center text-[#b85c38]">Create an account? <a href="/user/signup"
-                class="text-[#953f2c] hover:underline"> Signup</a></p>
+        <p class="mt-4 text-sm text-center text-[#2C3E50]">
+            Create an account? 
+            <a href="/user/signup" class="text-[#2980B9] hover:underline"> Signup</a>
+        </p>
     </div>
 </body>
 

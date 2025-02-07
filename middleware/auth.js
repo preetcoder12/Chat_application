@@ -1,25 +1,21 @@
-const { validateToken } = require("../services/auth");
+const jwt = require("jsonwebtoken");
+const User = require("../models/user"); // Import user model
 
+const checkForAuthentication = (tokenName) => async (req, res, next) => {
+    const token = req.cookies[tokenName];
 
-function checkForAuthentication(cookie_name) {
-    return (req, res, next) => {
-        const tokenCookieValue = req.cookies[cookie_name];
-        if (!tokenCookieValue) {
-            console.log("No token found.");
-            return next();
-        }
-        try {
-            const userPayload = validateToken(tokenCookieValue);
-            req.user = userPayload;
-            console.log("User authenticated:", userPayload);
-        } catch (error) {
-            console.log("Token validation failed!", error);
-        }
-        next();
-    };
-}
+    if (!token) {
+        req.user = null;
+        return next();
+    }
 
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = await User.findById(decoded.id);
+    } catch (err) {
+        req.user = null;
+    }
+    next();
+};
 
-module.exports = {
-    checkForAuthentication,
-}
+module.exports = { checkForAuthentication };

@@ -1,0 +1,16 @@
+{
+    "services": [
+      {
+        "name": "chat-app",
+        "type": "web",
+        "runtime": "node",
+        "buildCommand": "npm install",
+        "startCommand": "npm start",
+        "envVars": {
+          "PORT": "10000",
+          "MONGO_URL": "your-mongodb-cloud-url"
+        }
+      }
+    ]
+  }
+  
