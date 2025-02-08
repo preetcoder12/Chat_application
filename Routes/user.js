@@ -19,7 +19,7 @@ router.post("/signup", async (req, res) => {
         res.redirect("/user/signin");
     } catch (err) {
         console.error("Signup Error:", err);
-        res.render("signup", { error: "Something went wrong. Please try again!" });
+        res.render("signup", { error: "User already exist" });
     }
 });
 
